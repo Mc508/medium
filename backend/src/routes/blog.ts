@@ -9,17 +9,17 @@ export const blogRouter = new Hono<{
     JWT_SECRET: string
   },
   Variables: {
-    userId: string
+    userId: string,
   }
 }>()
 
-blogRouter.use("/*", async (c, next) => {
+blogRouter.use( async (c, next) => {
   const authHeader = c.req.header("authorization") || ""
 
   const user = await verify(authHeader, c.env.JWT_SECRET)
-
   if (user) {
-    c.set("userId", user.id)
+    c.set("userId", user.id as string )
+    // console.log(c.get("userId"));
     await next()
   } else {
     c.status(403)
@@ -67,31 +67,9 @@ blogRouter.put("/", async (c) => {
   })
 })
 
-blogRouter.get("/", async (c) => {
-  const body = await c.req.json()
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env?.DATABASE_URL,
-  }).$extends(withAccelerate())
-
-  try {
-    const blog = await prisma.blog.findFirst({
-      where: {
-        id: body.id,
-      },
-    })
-    c.status(200)
-    return c.json({
-      blog,
-    })
-  } catch (error) {
-    c.status(411)
-    return c.json({ error: "not found" })
-  }
-})
-
 // Todo : Add pagination
 
-blogRouter.get("/", async (c) => {
+blogRouter.get("/all", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env?.DATABASE_URL,
   }).$extends(withAccelerate())
@@ -107,3 +85,26 @@ blogRouter.get("/", async (c) => {
     return c.json({ error: "not found" })
   }
 })
+
+blogRouter.get("/:id", async (c) => {
+  const id =  c.req.param("id")
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate())
+
+  try {
+    const blog = await prisma.blog.findFirst({
+      where: {
+        id: id,
+      },
+    })
+    c.status(200)
+    return c.json({
+      blog,
+    })
+  } catch (error) {
+    c.status(411)
+    return c.json({ error: "not found" })
+  }
+})
+
