@@ -3,7 +3,7 @@ import Quote from "../components/Quote";
 
 const SignUp = () => {
   return (
-    <div className="grid grid-cols-2 h-screen items-center justify-center">
+    <div className="grid grid-cols-1 lg:grid-cols-2">
       <Auth type="signup" />
       <div className="invisible md:visible">
         <Quote />
