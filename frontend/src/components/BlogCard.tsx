@@ -31,12 +31,13 @@ const BlogCard = ({
 };
 export default BlogCard;
 
-function Avatar({ authorName }: { authorName: string }) {
+export function Avatar({ authorName }: { authorName: string }) {
   return (
     <div className="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
       <span className="font-medium text-xs text-gray-600 dark:text-gray-300">
-        {authorName.split(" ")[0][0].toUpperCase() +
-          authorName.split(" ")[1][0].toUpperCase()}
+        {authorName.split(" ")[0][0].toUpperCase()}
+        {/* {authorName.split(" ")[0][0].toUpperCase() +
+          authorName.split(" ")[1][0].toUpperCase()} */}
       </span>
     </div>
   );
